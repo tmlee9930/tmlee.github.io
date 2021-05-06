@@ -17,10 +17,10 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : "Tech-blog"
+title                    : "Ji Sun ~~ Luv"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
-name                     : "tmlee"
+name                     : "nus ij Luv"
 description              : "Tech-blog's website."
 url                      : "https://tmlee9930.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"

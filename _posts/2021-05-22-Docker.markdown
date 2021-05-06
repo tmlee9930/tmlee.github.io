@@ -1,0 +1,255 @@
+---
+layout:     post
+title:      "Docker & Kubernetes 개념 및 활용"
+date:       2021-05-20
+author:     이 태민 (tmlee@gluesys.com)
+categories: blog
+tags:       [Docker, Container, Images, Process, Tech]
+cover:      "/assets/1.JPG"
+main:      "/assets/1.JPG"
+---
+
+## 1. Docker 란? 
+----
+
+LXC(LinuX Containers)는 단일 컨트롤 호스트 상에서 여러 개의 고립된 리눅스 시스템(컨테이너)들을 실행하는 기술인 레벨 가상화 방식을 이용해 만든 컨테이너 기술 중의 하나입니다.
+
+Docker는 애플리케이션을 구축, 테스트 및 배포할 수 있는 소프트웨어 플랫폼으로서, 컨테이너라는 표준화된 기술로 패키징하며, 라이브러리, 시스템 도구, 코드, 가상화 이미지 등 소프트웨어를 실행하는 데 필요한 모든 것이 포함되어 있습니다.
+
+하나의 호스트 환경에서 동시에 여러 이미지를 가져와 구동시키면 각 컨테이너들의 프로세스가 실행되면서 신속게 배포 및 확장, 개발에 도움이 되면서 안정적입니다.
+
+## 1.1 Kubernetes 란?
+
+Linux Container 작업을 자동화하는 오픈소스 플랫폼으로 컨테이너화된 애플리케이션을 배포하고 확장하는데 수동 프로세스가 필요하지 않습니다.
+
+Linux Container를 실행하는 호스트 그룹을 함께 클러스터링 할 수 있으며, 쿠버네티스를 통해 클러스터를 쉽고 효율적으로 관리할 수 있습니다.
+
+여러 개의 Host를 하나로 묶어 관리하는 오케스트레이션 툴이며, 최소 배포 단위로 1개 이상의 컨테이너, 네트워크, 스토리지 등이 포함됩니다.
+분산 환경 방식으로 여러 대의 컴퓨팅 자원을 한 대의 컴퓨터 처럼 운영할 수 있습니다.
+
+![Alt text](/image/docker/kube.JPG)
+
+## 2. Docker 작동 방식?
+----
+
+Docker는 코드를 실행하는 표준 방식을 제공하며, 컨테이너를 위한 운영 체제 입니다. 가상 머신이 서버 하드웨어를 가상화하는 방식이면 컨테이너는 서비 운영 체제를 가상화 시킵니다.
+Docker는 각 서버에 설치되며 컨테이너를 구축, 시작 또는 중단하는 데 사용할 수 있는 명령어 및 옵션 기능도 제공하며, Docker에서는 Application을 컨테이너라고 합니다.
+
+가상머신과 컨테이너를 구분하기 위한 개념과 구조를 설명하도록 하겠습니다..!
+
+## 3. Virtual Machine VS Container
+----
+
+### 3.1. Virtual Machine 구조
+
+![Alt text](/image/docker/vm.JPG)
+
+* Virtual Machine은 Physical hardware를 추상화 방식으로 동작하며, 좀 더 쉽게 말하자면.. 하나의 Machine 위에서 여러 개의 VM (Guest OS)들이 동작하고, 각각의 VM들은 OS, binary & Library File이 있어야 합니다.
+
+* 물리적 Host와 그 위에 설치되는 가상화 하이퍼바이저(Hypervisor)에서 작동하며, Host가 Local 컴퓨터이며, 가상화 하이퍼바이저가 VirtualBox에 해당됩니다.
+
+* 최상위에서는 어플리케이션이 작동하지만 OS 사이에 어플리케이션 실행에 필요한 바이너리 파일(binary file)과 라이브러리 파일(library file)이 존재합니다.
+
+* 각각 Machine마다 저장공간 및 시간 소요 등 낭비가 심합니다.
+
+### 3.2. Container
+
+![Alt text](/image/docker/container.JPG)
+
+* Docker의 Container 구조는 Application Layer에서 종속되는 패키지 코드를 추상화하여 동작합니다.
+
+* Host OS 위에서 Docker가 동작하여 여러 개의 App 형태로 동작을 하며, VM 과는 다르게 다른 컨테이너와 함께 OS Kernel을 공유할 수 있습니다.
+
+* Docker에는 실행 환경인 Docker Engine을 공유하고 있어서 Guest OS를 전용 영역 등에 포함시키지 않고 어플리케이션 가동 만으로도 최소한의 자원을 커널에서 사용 가능합니다.
+
+* VM 과는 다르게 저장공간이 별개로 필요하지 않아서 저장공간, 낭비를 막을 수 있습니다.
+
+## 4. Docker Architecture
+----
+
+![Alt text](/image/docker/arch(docker).JPG)
+
+1. Client : Docker Container를 관리하고 실행하기 위해서 Daemon과 상호작용하는 Binary File 입니다.
+1. Registry : Docker Image가 저장되어 있는 장소이며, 대표적으로는 Docker Hub가 있습니다. (Publuc Registry, Private Registry)가 있습니다.
+1. Daemon : Host에 설치되어 Docker Container를 관리하는 daemon 프로세스이며, Client와 상호 작용 합니다.
+1. Image : Host에 설치되어 Docker Container로 실행 가능하도록 필요한 프로그램, 라이브러리, 소스 등이 설치된 파일입니다.
+1. Container : Image를 실행한 상태입니다.
+
+## 5. Docker 설치 ver. CentOS 7
+----
+
+* Yum 업데이트
+
+`root@jisun ~}# yum update -y`
+
+* Docker 설치 & 데몬 체크
+
+```
+root@jisun ~]# yum install -y docker
+root@jisun ~]# systemctl enable docker && systemctl start docker
+root@jisun ~]# docker version
+```
+
+## 6. Kubernetes 설치 (Master, Worker)
+----
+
+* Yum Repository 구성
+
+```
+sudo bash –c ‘cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+>[kubernetes]
+>name=Kubernetes
+>baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+>enabled=1
+>gpgcheck=1
+>repo_gpgcheck=1
+>gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+>exclude=kube*
+>EOF’
+```
+
+* 통신 문제를 방지하기 위한 SELinux 모드 변경
+
+```
+root@jisun ~]# setenforce 0 -> Permissive
+root@jisun ~]# sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+```
+
+* Kubernetes 설치 & Kubelet 활성화
+
+```
+root@jisun ~]# yum install -y kubeadm-1.15.5-0.x86_64 kubectl-1.15.5-0.x86_64 kubelet-1.15.5-0.x86_64 --disableexcludes=kubernetes
+root@jisun ~]# systemctl kubelet && systemctl start kubelet
+```
+
+## 7. Iptables 설정 (Master, Worker)
+----
+
+* Iptables 설정 파일 작성
+
+```
+bash -c  'cat <<EOF > /etc/sysctl.d/k8s.conf
+>net.bridge.bridge-nf-call-ip6tables = 1
+>net.bridge.bridge-nf-call-iptables = 1
+>EOF'
+```
+
+* Iptables 설정 파일 적용
+
+`root@jisun ~]# sysctl --system`
+
+* br_netfilter 모듈 로드 (방화벼 데몬 허용)
+
+`root@jisun ~]# lsmod | grep br_netfilter`
+
+![Alt text](/image/docker/netfilter.JPG)
+
+## 8. Cluster 설정
+----
+
+* Kubernetes Service Port 허용 (Master, Worker)
+
+```
+root@jisun ~]# firewall-cmd --permanent --add-port=6443/tcp
+root@jisun ~]# firewall-cmd --permanent --add-port=10250/tcp
+root@jisun ~]# firewall--cmd --reload
+```
+
+* Kubernetes 초기화에 사용될 이미지 Pull (Master, Worker)
+
+`root@jisun ~]# kubeadm config images pull`
+
+* Kubernetes Cluster 설정 (Master)
+
+`root@jisun ~]# kubeadm init --pod-network-cidr=10.244.0.0/16`
+
+* Kubernetes Cluster 설정 결과 (Master)
+
+![Alt text](/image/docker/cluster.JPG)
+
+* Kubernetes Cluster 접근 설정 (Master)
+
+```
+root@jisun ~]# mkdir -p $HOME/.kube
+root@jisun ~]# cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+* Kube flannel 적용 (Master)
+
+```
+root@jisun ~]# wget https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml
+root@jisun ~]# ip a # network interface 명 확인
+root@jisun ~]# vim kube-flannel.yml # command에 --iface=network-interface명 추가 
+```
+
+![Alt text](/image/docker/flannel.JPG)
+
+## Swap 주석 처리 (#)
+
+* swap으로 노드를 실행하면 공유 시스템을 실행 가능하게하는 많은 격리 속성을 잃어 성능이나 지연 시간 또는 I/O에 대한 예측이 어려우며, kubelet이 제대로 작동하려면 swap을 비활성화 해야합니다.
+
+* Swap 설정 끄기
+
+`root@jisun ~]# swapoff -a`
+
+* 영구적으로 swap 설정 끄기
+
+`root@jisun ~]# sed -i '/swap/s/^\(.*\)$/#\1/g' /etc/fstab`
+
+* CNI 설치 (Master)
+
+```
+root@jisun ~]# curl https://docs.projectcalico.org/archive/v3.8/manifests/calico.yaml -O
+root@jisun ~]# kubectl apply -f calico.yaml
+```
+
+* Kubernetes 주요 Pod 동작 확인 & 마스터 노드 연결 확인 (Master)
+
+```
+root@jisun ~]# kubectl get pod -n kube-system
+root@jisun ~]# kubectl get nodes
+```
+
+![Alt text](/image/docker/node1.JPG)
+
+* Master 노드에 추가 (Worker)
+
+`root@jisun ~]# kubeadm join [master-ip]:6443 --token [token] --discovery-token-ca-cert-hash sha256:[hash]`
+
+* Token & Hash 값 확인 (Master 노드에서 확인)
+
+```
+root@jisun ~]# kubeadm token list
+root@jisun ~]# openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+openssl dgst -sha256 -hex | sed 's/^.* //'
+```
+
+* token 값 없을경우 생성
+
+`root@jisun ~]# kubeadm token create`
+
+![Alt text](/image/docker/token.JPG)
+
+* Worker 노드 join 결과
+
+![Alt text](/image/docker/join.JPG)
+
+* Worker 노드 추가 확인 (마스터 노드 확인)
+
+![Alt text](/image/docker/nodes.JPG)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

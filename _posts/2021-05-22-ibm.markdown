@@ -1,0 +1,12 @@
+---
+layout:     post
+title:      "마이크로 서비스 IBM S/W"
+date:       2021-05-20
+author:     이 태민 (tmlee@gluesys.com)
+categories: blog
+tags:       [Docker, Command, Option, kube]
+cover:      "/assets/1.JPG"
+main:      "/assets/1.JPG"
+---
+
+sdsds
